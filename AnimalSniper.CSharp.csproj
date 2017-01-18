@@ -79,6 +79,11 @@
     <Compile Include="Assets\Scripts\Gun\Magazine.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerHealth.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerMove.cs" />
+    <Compile Include="Assets\Scripts\UI\CrossPlatformInputManager.cs" />
+    <Compile Include="Assets\Scripts\UI\Joystick.cs" />
+    <Compile Include="Assets\Scripts\UI\VirtualInput.cs" />
+    <Compile Include="Assets\Sprites\JoyStrck\PlatformSpecific\MobileInput.cs" />
+    <Compile Include="Assets\Sprites\JoyStrck\PlatformSpecific\StandaloneInput.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>
