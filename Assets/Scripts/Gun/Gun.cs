@@ -2,38 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gun : MonoBehaviour {
+public class Gun : MonoBehaviour
+{
+    public long fireDelay;
 
-    public float fireDelay;
     private Magazine magazine;
+    private long lastFireTime;
 
-	// Use this for initialization
-	void Start () {
-        magazine = GetComponent<Magazine>();
-        StartCoroutine(FireDelay());
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    private const long TO_SECOND = 10000000;
 
-    private IEnumerator FireDelay()
+    void Start()
     {
-        //WaitForSeconds delay = new WaitForSeconds(fireDelay);
-        while (true)
-        {
-            if (Input.GetButton("Fire1") && magazine.IsRemaining())
-            {
-                Fire();
-                yield return new WaitForSeconds(fireDelay);
-            }
-            yield return null;
-        }
+        magazine = GetComponent<Magazine>();
+        lastFireTime = 0;
     }
 
-    private void Fire()
+    void Update()
     {
+    }
+
+    public void Fire()
+    {
+        if (System.DateTime.Now.Ticks - lastFireTime < fireDelay * TO_SECOND)
+            return;
+        if (!magazine.IsRemaining())
+            return;
+        lastFireTime = System.DateTime.Now.Ticks;
         magazine.Decrease();
         Debug.Log("Fire");
     }

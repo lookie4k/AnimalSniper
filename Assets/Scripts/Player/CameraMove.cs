@@ -26,7 +26,7 @@ public class CameraMove : MonoBehaviour {
         Move();
     }
 
-    private void InitLimitPosition()
+    public void InitLimitPosition()
     {
         Vector3 mapSize = background.bounds.extents;
 

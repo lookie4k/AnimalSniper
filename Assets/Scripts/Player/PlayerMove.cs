@@ -6,15 +6,14 @@ using UnityStandardAssets.CrossPlatformInput;
 public class PlayerMove : MonoBehaviour {
 
     private Rigidbody2D playerRigidbody;
-    private Vector3 defaultLoc;
+    private Animation playerAnimation;
 
     public float speed;
-    public RectTransform aimJoystick;
 
     void Start()
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
-        defaultLoc = (aimJoystick.position - new Vector3(0, 0, 0));
+        playerAnimation = GetComponent<Animation>();
     }
 
     void Update () {
@@ -28,16 +27,20 @@ public class PlayerMove : MonoBehaviour {
         float y = CrossPlatformInputManager.GetAxisRaw("MoveVertical");
 
         Vector3 vector = new Vector3(x, y);
+        vector.Normalize();
 
         playerRigidbody.velocity = vector * speed;
     }
 
     private void Rotate()
     {
-        Vector3 distance = aimJoystick.position - defaultLoc;
-        float angle = Mathf.Atan2(distance.y, distance.x) * Mathf.Rad2Deg;
-        if (angle == 0)
+        float x = CrossPlatformInputManager.GetAxis("AimHorizontal") * -1;
+        float y = CrossPlatformInputManager.GetAxis("AimVertical");
+
+        float angle = Mathf.Atan2(x, y) * Mathf.Rad2Deg;
+        if (angle == 180 && x == 0 && y == 0)
             return;
-        transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
+
+        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
     }
 }
