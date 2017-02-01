@@ -11,7 +11,7 @@ public class Zoom : MonoBehaviour
     public float zoomInAngle;
 
     public PlayerMove player;
-    public Light playerLight;
+    private Light playerLight;
 
     private float defaultSpeed;
     private float defaultLight;
@@ -20,8 +20,10 @@ public class Zoom : MonoBehaviour
     private bool zoomStatus;
     private float defaultSize;
 
-    void Start()
+    public void ZoomSetUp(PlayerMove playerMove)
     {
+        player = playerMove;
+        playerLight = player.transform.GetComponentInChildren<Light>();
         defaultSpeed = player.speed;
         defaultLight = playerLight.range;
         defaultAngle = playerLight.spotAngle;

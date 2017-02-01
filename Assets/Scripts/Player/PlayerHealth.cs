@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,5 +24,6 @@ public class PlayerHealth : MonoBehaviour {
     {
         // TODO
         Debug.Log("Die");
+        SoundManager.GetInstance().OnSound(1);
     }
 }

@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 8b78622f57fbebf45aacfbf2ba01e961
+timeCreated: 1485136416
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Burliweh Sans
+  fontNames:
+  - Burliweh Sans
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

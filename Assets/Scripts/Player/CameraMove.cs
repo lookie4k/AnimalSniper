@@ -5,7 +5,6 @@ using UnityEngine;
 public class CameraMove : MonoBehaviour {
 
     public SpriteRenderer background;
-    public Transform player;
 
     private Vector3 limitPosition;
 
@@ -39,7 +38,10 @@ public class CameraMove : MonoBehaviour {
 
     private void Move()
     {
-        Vector3 playerPosition = player.position;
+        if (MultiManager.player == null)
+            return;
+        Vector3 playerPosition = MultiManager.player.transform.position;
+
         playerPosition.z = transform.position.z;
 
         transform.position = ClampVector(playerPosition, -1 * limitPosition, limitPosition);
