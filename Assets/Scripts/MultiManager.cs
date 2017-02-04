@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using SocketIO;
+using UnityEngine.SceneManagement;
 
 public class MultiManager : MonoBehaviour {
 
@@ -9,6 +10,7 @@ public class MultiManager : MonoBehaviour {
     public GameObject[] characters;
     public Gun gunManager;
     public Zoom zoomManager;
+    public Material material;
 
     private bool aleadyPlayer;
 
@@ -25,6 +27,8 @@ public class MultiManager : MonoBehaviour {
         SocketManager.socket.On("connect_user", ConnectPlayer);
         SocketManager.socket.On("disconnect", DisconnectPlayer);
         SocketManager.socket.On("id", SetPlayers);
+        SocketManager.socket.On("die", Die);
+        SocketManager.socket.On("pick_bullet", PickBullet);
     }
 
     private void AddTable()
@@ -39,12 +43,19 @@ public class MultiManager : MonoBehaviour {
         if (e.data.GetField("id").str.Equals(SocketManager.id))//자신일때
         {
             JSONObject player = e.data.GetField("player");
+            JSONObject location = e.data.GetField("loc");
+
             string type = player.GetField("type").str;
+            Vector3 position = new Vector3(location.GetField("x").f, location.GetField("y").f);
 
             MultiManager.player = Instantiate(characters[StringToType(type)]);
             MultiManager.player.name = e.data.GetField("id").str;
+            MultiManager.player.GetComponent<PlayerHealth>().ani_name = type.ToLower() + "_die";
             PlayerMove playerMove = MultiManager.player.GetComponent<PlayerMove>();
             Transform fireLocation = MultiManager.player.transform.GetChild(0);
+
+            MultiManager.player.transform.position = position;
+            MultiManager.player.GetComponent<SpriteRenderer>().material = material;
 
             gunManager.FireSetUp(fireLocation);
             zoomManager.ZoomSetUp(playerMove);
@@ -72,7 +83,9 @@ public class MultiManager : MonoBehaviour {
 
         GameObject gameObj = Instantiate(characters[StringToType(type)]);
         gameObj.name = data.GetField("id").str;
+        gameObj.GetComponent<PlayerHealth>().ani_name = type.ToLower() + "_die";
         PlayerMove playerMove = gameObj.GetComponent<PlayerMove>();
+        Destroy(gameObj.transform.GetChild(1).GetComponent<Light>());
         playerMove.isMultiPlayer = true;
         playerMove.SetPosition(position);
         playerMove.SetRotation(angle.GetField("x").f, angle.GetField("y").f);
@@ -90,6 +103,28 @@ public class MultiManager : MonoBehaviour {
                 return;
             CreatePlayer(player);
         }
+    }
+
+    private void Die(SocketIOEvent e)
+    {
+        string id = e.data.GetField("id").str;
+        GameObject.Find(id).GetComponent<Animator>().SetBool("die", true);
+        if (id.Equals(SocketManager.id))
+            StartCoroutine(GameOver());
+    }
+
+    private void PickBullet(SocketIOEvent e)
+    {
+        int index = (int) e.data.GetField("index").f;
+        Destroy(GameObject.Find("Bullet" + index));
+    }
+
+    private IEnumerator GameOver()
+    {
+        yield return new WaitForSeconds(2);
+        SceneManager.LoadScene("Gameover");
+        Destroy(GameObject.Find("SocketIO"));
+        yield return null;
     }
 
     private int StringToType(string type)

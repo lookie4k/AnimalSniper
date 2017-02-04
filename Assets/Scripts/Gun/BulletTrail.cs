@@ -11,4 +11,10 @@ public class BulletTrail : MonoBehaviour
     {
         transform.position += transform.right * speed * Time.deltaTime;
     }
+
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.gameObject.tag == "Obstacle" || col.gameObject.tag == "Player")
+            gameObject.SetActive(false);
+    }
 }

@@ -127,6 +127,12 @@ public class PlayerMove : MonoBehaviour
 
     public void SetPosition(Vector3 vector)
     {
+        if (isMultiPlayer)
+        {
+            playerRigidbody.position = new Vector3(vector.x, vector.y);
+            transform.position = new Vector3(transform.position.x, transform.position.y, 8.5f);
+            return;
+        }
         playerRigidbody.position = vector;
     }
 

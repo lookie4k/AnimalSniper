@@ -81,7 +81,7 @@ public class Gun : MonoBehaviour
         for (int i = 0; i < fireEffects.Length; i++)
             fireEffects[i].OnEffect(ray, rayHit);
 
-        if (rayHit.collider == null || rayHit.collider.tag != "Player")
+        if (rayHit.collider == null || rayHit.collider.tag == "Obstacle" || rayHit.collider.tag != "Player")
             return;
 
         PlayerHealth enemy = rayHit.collider.GetComponent<PlayerHealth>();

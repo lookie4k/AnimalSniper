@@ -81,9 +81,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\BulletRegenManager.cs" />
     <Compile Include="Assets\Scripts\Button\GotoHelp.cs" />
     <Compile Include="Assets\Scripts\Button\GotoSelect.cs" />
     <Compile Include="Assets\Scripts\Button\NextHelp.cs" />
+    <Compile Include="Assets\Scripts\Gun\Bullet.cs" />
     <Compile Include="Assets\Scripts\Gun\BulletTrail.cs" />
     <Compile Include="Assets\Scripts\Gun\BulletTrailEffect.cs" />
     <Compile Include="Assets\Scripts\Gun\Gun.cs" />
@@ -93,9 +95,10 @@
     <Compile Include="Assets\Scripts\Player\CameraMove.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerHealth.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerMove.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerScore.cs" />
     <Compile Include="Assets\Scripts\Socket\SocketManager.cs" />
     <Compile Include="Assets\Scripts\Sound\SoundManager.cs" />
-    <Compile Include="Assets\Scripts\UI\StartScene.cs" />
+    <Compile Include="Assets\Scripts\UI\SceneUI.cs" />
     <Compile Include="Assets\SocketIO\JSONObject\JSONObject.cs" />
     <Compile Include="Assets\SocketIO\JSONObject\JSONTemplates.cs" />
     <Compile Include="Assets\SocketIO\JSONObject\VectorTemplates.cs" />

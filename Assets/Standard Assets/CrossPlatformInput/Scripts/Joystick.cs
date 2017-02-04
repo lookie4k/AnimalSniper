@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace UnityStandardAssets.CrossPlatformInput
 {
@@ -19,6 +20,9 @@ namespace UnityStandardAssets.CrossPlatformInput
 		public string horizontalAxisName = "Horizontal"; // The name given to the horizontal axis for the cross platform input
 		public string verticalAxisName = "Vertical"; // The name given to the vertical axis for the cross platform input
 
+        private Image bgImg;
+        private Image joystickImg;
+
 		Vector3 m_StartPos;
 		bool m_UseX; // Toggle for using the x axis
 		bool m_UseY; // Toggle for using the Y axis
@@ -32,7 +36,10 @@ namespace UnityStandardAssets.CrossPlatformInput
 
         void Start()
         {
-            m_StartPos = transform.position;
+            bgImg = GetComponent<Image>();
+            joystickImg = transform.GetChild(0).GetComponent<Image>();
+
+            m_StartPos = joystickImg.transform.position;
         }
 
 		void UpdateVirtualAxes(Vector3 value)
@@ -73,29 +80,43 @@ namespace UnityStandardAssets.CrossPlatformInput
 
 		public void OnDrag(PointerEventData data)
 		{
-			Vector3 newPos = Vector3.zero;
+            Vector2 pos;
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(bgImg.rectTransform, data.position, data.pressEventCamera, out pos))
+            {
+                Vector3 newPos;
+                pos.x = (pos.x / bgImg.rectTransform.sizeDelta.x);
+                pos.y = (pos.y / bgImg.rectTransform.sizeDelta.y);
+
+                newPos = new Vector3(pos.x * 2 + 1, pos.y * 2 - 1);
+                newPos = (newPos.magnitude > 1.0f) ? newPos.normalized : newPos;
+
+                joystickImg.rectTransform.anchoredPosition = new Vector3(newPos.x * (bgImg.rectTransform.sizeDelta.x / 2), newPos.y * (bgImg.rectTransform.sizeDelta.y / 2));
+                UpdateVirtualAxes(joystickImg.transform.position);
+            }
+			/*Vector3 newPos = (Vector3) data.position - m_StartPos;
+            if (newPos.magnitude > 1)
+                newPos.Normalize();
 
 			if (m_UseX)
 			{
-				int delta = (int)(data.position.x - m_StartPos.x);
-				delta = Mathf.Clamp(delta, - MovementRange, MovementRange);
-				newPos.x = delta;
-			}
+                int delta = (int)(data.position.x - m_StartPos.x);
+                delta = Mathf.Clamp(delta, -MovementRange, MovementRange);
+                newPos.x = delta;
+            }
 
-			if (m_UseY)
+            if (m_UseY)
 			{
 				int delta = (int)(data.position.y - m_StartPos.y);
 				delta = Mathf.Clamp(delta, -MovementRange, MovementRange);
 				newPos.y = delta;
 			}
-			transform.position = new Vector3(m_StartPos.x + newPos.x, m_StartPos.y + newPos.y, m_StartPos.z + newPos.z);
-			UpdateVirtualAxes(transform.position);
+			transform.position = new Vector3(m_StartPos.x + newPos.x * MovementRange, m_StartPos.y + newPos.y * MovementRange, m_StartPos.z + newPos.z * MovementRange);*/
 		}
 
 
 		public void OnPointerUp(PointerEventData data)
 		{
-			transform.position = m_StartPos;
+			joystickImg.transform.position = m_StartPos;
 			UpdateVirtualAxes(m_StartPos);
 		}
 

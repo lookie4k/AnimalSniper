@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using SocketIO;
 
-public class StartScene : MonoBehaviour {
+public class SceneUI : MonoBehaviour {
 
     private Type type;
     private InputField inputField;
@@ -16,7 +16,14 @@ public class StartScene : MonoBehaviour {
         inputField = transform.GetChild(2).GetComponent<InputField>();
     }
 
-	public void SelectDog()
+    public void RePlay()
+    {
+        Destroy(GameObject.Find("SocketManager"));
+        Destroy(GameObject.Find("SoundManager"));
+        SceneManager.LoadScene("Start");
+    }
+
+    public void SelectDog()
     {
         type = Type.DOG;
     }

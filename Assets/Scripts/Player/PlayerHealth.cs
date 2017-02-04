@@ -6,6 +6,13 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour {
 
     public int health;
+    public string ani_name;
+
+    void Update()
+    {
+        if (GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName(ani_name))
+            Destroy(gameObject);
+    }
 
     public void SetHealth(int health)
     {
@@ -24,6 +31,7 @@ public class PlayerHealth : MonoBehaviour {
     {
         // TODO
         Debug.Log("Die");
-        SoundManager.GetInstance().OnSound(1);
+        if (gameObject.name.Equals(SocketManager.id))
+            SocketManager.socket.Emit("die");
     }
 }
