@@ -19,16 +19,20 @@ public class MultiManager : MonoBehaviour {
     void Awake()
     {
         AddTable();
-        //GameObject gameObj = dictionary[SocketManager.characterInfo.GetField("type").str];
 
-        //player = Instantiate(gameObj);
-        //player.name = "Character";
+        Destroy(SoundManager.GetInstance().startBgm);
 
         SocketManager.socket.On("connect_user", ConnectPlayer);
         SocketManager.socket.On("disconnect", DisconnectPlayer);
         SocketManager.socket.On("id", SetPlayers);
         SocketManager.socket.On("die", Die);
         SocketManager.socket.On("pick_bullet", PickBullet);
+        SocketManager.socket.On("player_sound", Sound);
+    }
+
+    void Start()
+    {
+        SocketManager.socket.Emit("connect", SocketManager.characterInfo);
     }
 
     private void AddTable()
@@ -119,10 +123,23 @@ public class MultiManager : MonoBehaviour {
         Destroy(GameObject.Find("Bullet" + index));
     }
 
+    private void Sound(SocketIOEvent e)
+    {
+        string id = e.data.GetField("id").str;
+        int index = (int) e.data.GetField("index").f;
+        float min = e.data.GetField("min").f;
+        float max = e.data.GetField("max").f;
+
+        GameObject.Find(id).GetComponentInChildren<PlayerSound>().PlaySound(index, min, max);
+    }
+
     private IEnumerator GameOver()
     {
+        SoundManager.GetInstance().gcSource.Remove(SoundManager.GetInstance().bgm);
+        Destroy(SoundManager.GetInstance().bgm);
         yield return new WaitForSeconds(2);
         SceneManager.LoadScene("Gameover");
+        SoundManager.GetInstance().PlaySound(1, 5f, 5f, Vector3.zero);
         Destroy(GameObject.Find("SocketIO"));
         yield return null;
     }

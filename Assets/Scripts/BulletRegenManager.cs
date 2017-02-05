@@ -7,14 +7,8 @@ public class BulletRegenManager : MonoBehaviour {
 
     public GameObject bullet;
 
-	// Use this for initialization
 	void Start () {
         SocketManager.socket.On("bullet_regen", BulletRegen);
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
 	}
 
     private void BulletRegen(SocketIOEvent e) {

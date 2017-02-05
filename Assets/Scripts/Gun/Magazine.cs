@@ -13,6 +13,11 @@ public class Magazine : MonoBehaviour {
         UpdateDisplaySize();
     }
 
+    void Update()
+    {
+        UpdateDisplaySize();
+    }
+
     private void UpdateDisplaySize()
     {
         GameObject.Find("Text").GetComponent<Text>().text = currentSize.ToString();

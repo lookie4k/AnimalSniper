@@ -52,6 +52,9 @@
     <Reference Include="UnityEngine">
       <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Advertisements">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Advertisements.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
@@ -66,6 +69,9 @@
     </Reference>
     <Reference Include="UnityEngine.HoloLens">
       <HintPath>Library\UnityAssemblies\UnityEngine.HoloLens.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Purchasing">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Purchasing.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.VR">
       <HintPath>Library\UnityAssemblies\UnityEngine.VR.dll</HintPath>
@@ -90,13 +96,14 @@
     <Compile Include="Assets\Scripts\Gun\BulletTrailEffect.cs" />
     <Compile Include="Assets\Scripts\Gun\Gun.cs" />
     <Compile Include="Assets\Scripts\Gun\Magazine.cs" />
+    <Compile Include="Assets\Scripts\Gun\ScoreManager.cs" />
     <Compile Include="Assets\Scripts\Gun\Zoom.cs" />
     <Compile Include="Assets\Scripts\MultiManager.cs" />
     <Compile Include="Assets\Scripts\Player\CameraMove.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerHealth.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerMove.cs" />
-    <Compile Include="Assets\Scripts\Player\PlayerScore.cs" />
     <Compile Include="Assets\Scripts\Socket\SocketManager.cs" />
+    <Compile Include="Assets\Scripts\Sound\PlayerSound.cs" />
     <Compile Include="Assets\Scripts\Sound\SoundManager.cs" />
     <Compile Include="Assets\Scripts\UI\SceneUI.cs" />
     <Compile Include="Assets\SocketIO\JSONObject\JSONObject.cs" />

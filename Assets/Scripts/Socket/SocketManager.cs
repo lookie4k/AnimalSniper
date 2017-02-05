@@ -22,7 +22,6 @@ public class SocketManager : MonoBehaviour {
     void OnDisable()
     {
         socket.Close();
-        Debug.Log("Socket Died");
     }
 
     private IEnumerator CheckConnection()

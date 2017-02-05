@@ -12,14 +12,22 @@ public class SceneUI : MonoBehaviour {
 
     void Start()
     {
-        type = Type.NULL;
-        inputField = transform.GetChild(2).GetComponent<InputField>();
+        if (SceneManager.GetActiveScene().name.Equals("Start"))
+        {
+            type = Type.NULL;
+            inputField = transform.GetChild(2).GetComponent<InputField>();
+        }
+
+
+        if (SceneManager.GetActiveScene().name.Equals("Gameover"))
+            ScoreManager.DisplayScore();
     }
 
     public void RePlay()
     {
         Destroy(GameObject.Find("SocketManager"));
         Destroy(GameObject.Find("SoundManager"));
+        Destroy(GameObject.Find("ScoreManager"));
         SceneManager.LoadScene("Start");
     }
 
@@ -46,11 +54,13 @@ public class SceneUI : MonoBehaviour {
         json.AddField("name", inputField.text);
         json.AddField("type", type.ToString());
 
-        SocketManager.socket.On("id", GetId);
-        SocketManager.socket.Emit("connect", json);
+        SocketManager.socket.On("get_id", GetId);
         SocketManager.characterInfo = json;
+        SocketManager.socket.Emit("get_id");
 
         SceneManager.LoadScene("Game");
+
+        SoundManager.GetInstance().PlayBackgroundSound();
     }
 
     private void GetId(SocketIOEvent e)

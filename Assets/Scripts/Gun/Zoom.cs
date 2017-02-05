@@ -38,6 +38,8 @@ public class Zoom : MonoBehaviour
             ZoomOut();
         else
             ZoomIn();
+
+        player.transform.GetComponentInChildren<PlayerSound>().PlaySound(2, 5f, 5f);
     }
 
     private void ZoomIn()

@@ -29,9 +29,10 @@ public class PlayerHealth : MonoBehaviour {
 
     private void Die()
     {
-        // TODO
-        Debug.Log("Die");
+        if (!gameObject.name.Equals(SocketManager.id))
+            return;
+        SocketManager.socket.Emit("die");
         if (gameObject.name.Equals(SocketManager.id))
-            SocketManager.socket.Emit("die");
+            SoundManager.GetInstance().PlaySound(0, 2f, 2f, transform.position);
     }
 }

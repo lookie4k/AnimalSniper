@@ -20,6 +20,8 @@ public class Bullet : MonoBehaviour {
         JSONObject json = new JSONObject();
         json.AddField("index", index);
 
+        GameObject.Find(SocketManager.id).GetComponentInChildren<PlayerSound>().PlaySound(4, 5f, 5f);
+
         SocketManager.socket.Emit("pick_bullet", json);
     }
 }

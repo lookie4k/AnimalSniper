@@ -10,45 +10,36 @@ public abstract class GunFireEffect : MonoBehaviour
 
 public class Gun : MonoBehaviour
 {
-    public long fireDelay;
+    public float fireDelay;
+    private bool isFire;
 
     public Transform fireTransform;
     public GunFireEffect[] fireEffects;
 
     public Magazine magazine;
     public PlayerMove playerMove;
-    public long lastFireTime;
-
-    private const long TO_SECOND = 10000000;
-
-    /*void Start()
-    {
-        fireTransform = MultiManager.fireLocation.transform;
-        magazine = fireTransform.GetComponentInParent<Magazine>();
-        playerMove = fireTransform.GetComponentInParent<PlayerMove>();
-        lastFireTime = 0;
-
-        SocketManager.socket.On("fire", FirePlayer);
-    }*/
+    public ScoreManager scoreManager;
 
     public void FireSetUp(Transform fireLocation)
     {
         fireTransform = fireLocation.transform;
         magazine = fireTransform.GetComponentInParent<Magazine>();
         playerMove = fireTransform.GetComponentInParent<PlayerMove>();
-        lastFireTime = 0;
 
         SocketManager.socket.On("fire", FirePlayer);
     }
 
     public void Fire()
     {
-        long currentTime = System.DateTime.Now.Ticks;
-        if (currentTime - lastFireTime < fireDelay * TO_SECOND)
+        if (isFire)
             return;
         if (!magazine.IsRemaining())
+        {
+            GameObject.Find(SocketManager.id).transform.GetChild(2).GetComponent<PlayerSound>().PlaySound(3, 5f, 5f);
             return;
-        lastFireTime = currentTime;
+        }
+        isFire = !isFire;
+
         magazine.Decrease();
 
         JSONObject json = new JSONObject();
@@ -67,8 +58,11 @@ public class Gun : MonoBehaviour
 
     private void FirePlayer(SocketIOEvent e)
     {
-        JSONObject posJson = e.data.GetField("pos");
-        JSONObject angleJson = e.data.GetField("angle");
+        string id = e.data.GetField("id").str;
+        JSONObject data = e.data.GetField("data");
+
+        JSONObject posJson = data.GetField("pos");
+        JSONObject angleJson = data.GetField("angle");
 
         float posX = posJson.GetField("x").f;
         float posY = posJson.GetField("y").f;
@@ -76,7 +70,14 @@ public class Gun : MonoBehaviour
         float angleY = angleJson.GetField("y").f;
 
         Ray2D ray = new Ray2D(new Vector2(posX, posY), new Vector2(angleX, angleY));
-        RaycastHit2D rayHit = Physics2D.Raycast(ray.origin, ray.direction, 20f);
+        RaycastHit2D rayHit = Physics2D.Raycast(ray.origin, ray.direction, 1000f);
+        SoundManager.GetInstance().PlaySound(6, 1f, 2f, new Vector3(posX, posY, 0));
+
+        if (SocketManager.id.Equals(id))
+        {
+            scoreManager.AddScore(5);
+            StartCoroutine(PlayReloadSound());
+        }
 
         for (int i = 0; i < fireEffects.Length; i++)
             fireEffects[i].OnEffect(ray, rayHit);
@@ -86,5 +87,24 @@ public class Gun : MonoBehaviour
 
         PlayerHealth enemy = rayHit.collider.GetComponent<PlayerHealth>();
         enemy.Damage();
+
+        if (SocketManager.id.Equals(id))
+            scoreManager.AddScore(5);
+    }
+
+    private IEnumerator PlayReloadSound()
+    {
+        yield return new WaitForSeconds(1.5f);
+        GameObject.Find(SocketManager.id).transform.GetChild(2).GetComponent<PlayerSound>().PlaySound(0, 0.5f, 0.5f);
+
+        JSONObject json = new JSONObject();
+        json.AddField("id", SocketManager.id);
+        json.AddField("index", 0);
+        json.AddField("min", 0.1f);
+        json.AddField("max", 0.1f);
+
+        SocketManager.socket.Emit("player_sound", json);
+        yield return new WaitForSeconds(fireDelay);
+        isFire = !isFire;
     }
 }

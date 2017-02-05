@@ -45,7 +45,7 @@ public class BulletTrailEffect : GunFireEffect
 
         gameObj.SetActive(true);
 
-        StartCoroutine(DisableObject(gameObj, 1f));
+        StartCoroutine(DisableObject(gameObj, 3f));
     }
 
     private IEnumerator DisableObject(GameObject gameObj, float delay)

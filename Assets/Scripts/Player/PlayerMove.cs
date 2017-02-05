@@ -60,6 +60,7 @@ public class PlayerMove : MonoBehaviour
                 aniJson.AddField("run", true);
 
                 SocketManager.socket.Emit("ani_run", aniJson);
+                StartCoroutine(WalkSound());
 
                 toggle = !toggle;
             }
@@ -75,6 +76,8 @@ public class PlayerMove : MonoBehaviour
                 JSONObject aniJson = new JSONObject();
                 aniJson.AddField("run", false);
                 SocketManager.socket.Emit("ani_run", aniJson);
+
+                StopAllCoroutines();
 
                 json.AddField("x", playerRigidbody.transform.position.x);
                 json.AddField("y", playerRigidbody.transform.position.y);
@@ -156,5 +159,25 @@ public class PlayerMove : MonoBehaviour
             toggle_run = ani_run;
             playerAnimator.SetBool("run", toggle_run);
         }
+    }
+
+    private IEnumerator WalkSound()
+    {
+        while (true)
+        {
+            transform.GetComponentInChildren<PlayerSound>().PlaySound(5, 2f, 3.5f);
+            JSONObject json = new JSONObject();
+            json.AddField("id", SocketManager.id);
+            json.AddField("index", 5);
+            json.AddField("min", 1f);
+            json.AddField("max", 2f);
+            SocketManager.socket.Emit("player_sound", json);
+            yield return new WaitForSeconds(0.6f);
+            transform.GetComponentInChildren<PlayerSound>().PlaySound(6, 2f, 3.5f);
+            json.SetField("index", 6);
+            SocketManager.socket.Emit("player_sound", json);
+            yield return new WaitForSeconds(0.1f);
+        }
+        yield return null;
     }
 }
